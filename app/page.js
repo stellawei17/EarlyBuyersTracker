@@ -499,7 +499,14 @@ export default function Page() {
                           </div>
                         </td>
 
-                        <td style={{ padding: "10px 12px", fontSize: 12 }}>{r.tx_count ?? "-"}</td>
+                        <td style={{ padding: "10px 12px", fontSize: 12 }}>
+  {r.tx_count == null
+    ? "-"
+    : Number(r.tx_count) >= 15000
+      ? "15000+"
+      : r.tx_count}
+</td>
+
 
                         <td style={{ padding: "10px 12px" }}>
                           <span style={pillStyle(safeTag)}>{safeTag}</span>
