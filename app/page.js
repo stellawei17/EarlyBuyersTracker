@@ -178,6 +178,15 @@ export default function Page() {
     >
       {/* ✅ Responsive CSS */}
       <style>{`
+
+
+      /* Hide Txs (3rd column) and Tag (4th column) */
+table th:nth-child(3),
+table td:nth-child(3),
+table th:nth-child(4),
+table td:nth-child(4) {
+  display: none;
+}
         @media (max-width: 640px) {
           .wrap { padding: 12px !important; }
           .headerInner { padding: 12px 12px !important; }
