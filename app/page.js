@@ -179,6 +179,25 @@ export default function Page() {
       {/* ✅ Responsive CSS */}
       <style>{`
 
+      /* Hide SOL column */
+table th:nth-child(3),
+table td:nth-child(3) {
+  display: none;
+}
+
+/* Hide % Supply Bought column */
+table th:nth-child(6),
+table td:nth-child(6) {
+  display: none;
+}
+
+/* Hide % Supply Remaining column */
+table th:nth-child(8),
+table td:nth-child(8) {
+  display: none;
+}
+
+
       /* Hide Txs (3rd column) and Tag (4th column) */
 table th:nth-child(3),
 table td:nth-child(3),
