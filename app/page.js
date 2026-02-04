@@ -36,60 +36,17 @@ function shortAddr(a) {
   return a ? a.slice(0, 6) + "…" + a.slice(-6) : "";
 }
 
-function pillStyle(kind) {
-  const base = {
-    display: "inline-flex",
-    alignItems: "center",
-    padding: "5px 10px",
-    borderRadius: 999,
-    border: `1px solid ${C.border}`,
-    background: "rgba(0,0,0,0.25)",
-    fontSize: 12,
-    fontWeight: 900
-  };
-  if (kind === "BOT")
-    return {
-      ...base,
-      color: C.danger,
-      borderColor: "rgba(255,77,109,0.35)",
-      background: "rgba(255,77,109,0.10)"
-    };
-  if (kind === "FRESH")
-    return {
-      ...base,
-      color: C.warn,
-      borderColor: "rgba(251,191,36,0.35)",
-      background: "rgba(251,191,36,0.10)"
-    };
-  if (kind === "TRADER")
-    return {
-      ...base,
-      color: C.accent1,
-      borderColor: "rgba(20,241,149,0.35)",
-      background: "rgba(20,241,149,0.10)"
-    };
-  if (kind === "UNCLASSIFIED")
-    return {
-      ...base,
-      color: C.sub,
-      borderColor: "rgba(255,255,255,0.12)",
-      background: "rgba(255,255,255,0.04)"
-    };
-  return { ...base, color: C.sub };
-}
-
-/** Normalize status coming from API (usually SOLD_ALL/SOLD_PART/NO_ACTIVITY/HOLDING) */
+/** Normalize status coming from API (SOLD ALL / SOLD PART / NO ACTIVITY / HOLDING, etc) */
 function normalizeStatusKey(s) {
   if (!s) return "NO_ACTIVITY";
   const t = String(s).trim().toUpperCase();
   if (t === "SOLD ALL") return "SOLD_ALL";
   if (t === "SOLD PART") return "SOLD_PART";
   if (t === "NO ACTIVITY") return "NO_ACTIVITY";
-  return t; // keep SOLD_ALL, SOLD_PART, HOLDING, NO_ACTIVITY, UNKNOWN, etc
+  return t;
 }
 function statusDisplay(s) {
   const key = normalizeStatusKey(s);
-  // Display should be with spaces
   return key.replaceAll("_", " ");
 }
 function statusStyle(s) {
@@ -100,12 +57,6 @@ function statusStyle(s) {
   if (key === "HOLDING") return { ...base, color: C.accent1 };
   if (key === "NO_ACTIVITY") return { ...base, color: C.sub };
   return base;
-}
-
-function tagLabel(t) {
-  if (!t) return "UNCLASSIFIED";
-  if (t === "-") return "UNCLASSIFIED";
-  return String(t).toUpperCase();
 }
 
 function btnStyle({ variant = "ghost", small = false } = {}) {
@@ -448,8 +399,6 @@ export default function Page() {
                     {[
                       "#",
                       "Address",
-                      "Txs",
-                      "Tag",
                       "SOL",
                       "Status",
                       "Token Bought",
@@ -478,8 +427,7 @@ export default function Page() {
 
                 <tbody>
                   {rows.map((r, idx) => {
-                    const safeTag = tagLabel(r.tag);
-                    const statusText = statusDisplay(r.status); // ✅ SOLD ALL / SOLD PART / etc (no underscore)
+                    const statusText = statusDisplay(r.status);
 
                     return (
                       <tr key={r.wallet + (r.signature || "")} style={{ borderBottom: `1px solid ${C.border}` }}>
@@ -499,23 +447,9 @@ export default function Page() {
                           </div>
                         </td>
 
-                        <td style={{ padding: "10px 12px", fontSize: 12 }}>
-  {r.tx_count == null
-    ? "-"
-    : Number(r.tx_count) >= 15000
-      ? "15000+"
-      : r.tx_count}
-</td>
-
-
-                        <td style={{ padding: "10px 12px" }}>
-                          <span style={pillStyle(safeTag)}>{safeTag}</span>
-                        </td>
-
                         <td style={{ padding: "10px 12px", fontSize: 12 }}>{fmt(r.sol_balance, 4)}</td>
 
                         <td style={{ padding: "10px 12px", fontSize: 12 }}>
-                          {/* ✅ style uses API key, display is spaced */}
                           <span style={statusStyle(r.status)}>{statusText}</span>
                         </td>
 
@@ -556,9 +490,7 @@ export default function Page() {
               </table>
             </div>
 
-            <div style={{ padding: 12, color: C.sub, fontSize: 12 }}>
-              Tag rules: <b>BOT</b> tx ≥ 10,000 • <b>FRESH</b> tx &lt; 200 • <b>TRADER</b> 500–3000 • <b>UNCLASSIFIED</b> otherwise.
-            </div>
+            {/* Removed Tag rules footer since tx_count/tag are removed */}
           </div>
         )}
       </div>
